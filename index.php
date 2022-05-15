@@ -25,67 +25,74 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
-<body class="hold-transition sidebar-mini">
-  <div class="card">
-    <div class="row">
-      <div class="col-md-12">
-        <h1 style="text-algin:center !important">Blog Posts</h1>
+<body class="container-xl">
+
+      <div class="row">
+        <div class="col-md-12">
+          <h1 style="text-align:center !important">Blog Posts</h1>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <?php
-      if (!empty($_GET['pageno'])) {
-        $pageno = $_GET['pageno'];
-      }
-      else {
-        $pageno = 1;
-      }
-        $frames = 6;
-        $offset = ($pageno - 1) * $frames;
-        $pdostatement = $pdo->prepare("SELECT * FROM post ORDER BY id DESC");
-        $pdostatement->execute();
-        $rawResult = $pdostatement->fetchAll();
-        $totalpages = ceil(count($rawResult)/$frames);
+      <div class="row">
+        <?php
+        if (!empty($_GET['pageno'])) {
+          $pageno = $_GET['pageno'];
+        }
+        else {
+          $pageno = 1;
+        }
+          $frames = 6;
+          $offset = ($pageno - 1) * $frames;
+          $pdostatement = $pdo->prepare("SELECT * FROM post ORDER BY id DESC");
+          $pdostatement->execute();
+          $rawResult = $pdostatement->fetchAll();
+          $totalpages = ceil(count($rawResult)/$frames);
 
-        $pdostatement = $pdo->prepare("SELECT * FROM post ORDER BY id DESC LIMIT $offset,$frames");
-        $pdostatement->execute();
-        $result = $pdostatement->fetchAll();
+          $pdostatement = $pdo->prepare("SELECT * FROM post ORDER BY id DESC LIMIT $offset,$frames");
+          $pdostatement->execute();
+          $result = $pdostatement->fetchAll();
 
-         if ($result) {
-             foreach ($result as $value) {
-         ?>
-         <div class="col-md-4">
-           <div class="card card-widget">
-             <div class="card-header">
-                 <h2><?php echo $value['title']?></h2>
-             </div>
-             <div class="card-body">
-               <a href="blogdetails.php?id=<?php echo $value['id']?>"><img class="img-fluid pad" src="admin/images/<?php echo $value['image']?>" alt="Photo"></a>
+           if ($result) {
+               foreach ($result as $value) {
+           ?>
+           <div class="col-md-4">
+             <div class="card card-widget">
+               <div class="card-header">
+                   <h2 style="text-align:center !important"><?php echo $value['title']?></h2>
+               </div>
+               <div class="card-body">
+                 <a href="blogdetails.php?id=<?php echo $value['id']?>"><img class="img-fluid pad" src="admin/images/<?php echo $value['image']?>" alt="Photo" width=100%></a>
+               </div>
              </div>
            </div>
-         </div>
-         <?php
-             }
-         }
-      ?>
-        <div class="col-md-12">
-          <nav aria-label="Page navigation example" style="float:right">
-            <ul class="pagination">
-              <li class="page-item"><a class="page-link" href="?pageno=1">Fir</a></li>
-              <li class="page-item <?php if($pageno <= 1){echo 'disabled';}?>">
-                <a class="page-link" href="<?php if ($pageno <=1) {echo '#';}else {echo "?pageno=".($pageno-1);}?>">Previous</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#"><?php echo $pageno;?></a></li>
-              <li class="page-item <?php if($pageno >= $totalpages){echo 'disabled';}?>">
-                <a class="page-link" href="<?php if($pageno>=$totalpages){echo '#';}else{echo "?pageno=".($pageno+1);}?>">Next</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="?pageno=<?php echo $totalpages?>">Last</a></li>
-            </ul>
-          </nav>
+           <?php
+               }
+           }
+        ?>
+
+            <div class="col-md-6">
+              <nav aria-label="Page navigation example" >
+                <ul class="pagination">
+                  <li class="page-item"><a class="page-link" href="?pageno=1">Fir</a></li>
+                  <li class="page-item <?php if($pageno <= 1){echo 'disabled';}?>">
+                    <a class="page-link" href="<?php if ($pageno <=1) {echo '#';}else {echo "?pageno=".($pageno-1);}?>">Previous</a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#"><?php echo $pageno;?></a></li>
+                  <li class="page-item <?php if($pageno >= $totalpages){echo 'disabled';}?>">
+                    <a class="page-link" href="<?php if($pageno>=$totalpages){echo '#';}else{echo "?pageno=".($pageno+1);}?>">Next</a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="?pageno=<?php echo $totalpages?>">Last</a></li>
+                </ul>
+              </nav>
+            </div>
+            <div class="col-md-6">
+              <a href="logout.php" class="btn btn-danger btn-block">logout.php</a>
+            </div>
+
+
+
         </div>
 
-      </div>
-  </div>
+
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>

@@ -19,9 +19,17 @@
     $pdo_statement1->execute();
     $cmresult = $pdo_statement1->fetchAll();
 
-    $pdo_statement2 = $pdo->prepare("SELECT * FROM users WHERE id=".$_SESSION['user_id']);
-    $pdo_statement2->execute();
-    $Result = $pdo_statement2->fetchAll();
+    // print'<pre>';
+    // print_r($cmresult);
+    // exit();
+
+
+    // $pdo_statement2 = $pdo->prepare("SELECT * FROM users WHERE id=".$_SESSION['user_id']);
+    // $pdo_statement2->execute();
+    // $Result = $pdo_statement2->fetchAll();
+    // print'<pre>';
+    // print_r($Result);
+    // exit();
 
     if ($_POST) {
       $comment=$_POST['comment'];
@@ -34,12 +42,6 @@
       header('Location: blogdetails.php?id='.$post_id);
     }
   }
-
-
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,19 +59,19 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="container-xl">
   <div class="row">
     <div class="col-md-12">
       <!-- Box Comment -->
       <div class="card card-widget">
         <div class="card-header">
-          <h1>blog post</h1>
+          <h1 style="text-align:center !important">blog post</h1>
           <!-- /.user-block -->
         </div>
         <!-- /.card-header -->
         <div class="card-body">
           <img class="img-fluid pad" src="admin/images/<?php echo $result[0]['image']?>" alt="Photo">
-
+          <br><br>
           <p><?php echo $result[0]['description']?></p>
           <a type="button" class="btn btn-success" href="/blog">Go back to home page</a>
 
@@ -79,21 +81,34 @@
         <div class="card-footer card-comments">
           <h3 style="text-algin:center !important">Comments</h3>
 
-          <!-- /.card-comment -->
-          <div class="card-comment">
-            <!-- User image -->
-            <img class="img-circle img-sm" src="dist/img/user4-128x128.jpg" alt="User Image">
+          <?php
+          foreach ($cmresult as $value) {?>
+            <div class="card-comment">
+              <!-- User image -->
+              <img class="img-circle img-sm" src="dist/img/user4-128x128.jpg" alt="User Image">
 
-            <div class="comment-text">
-              <span class="username">
+              <div class="comment-text">
+                <span class="username">
+                <?php
+
+                  $name=$value['author_id'];
+                  $pdo_statement2 = $pdo->prepare("SELECT * FROM users WHERE id=$name");
+                  $pdo_statement2->execute();
+                  $Result = $pdo_statement2->fetchAll();
+
+
+                ?>
                 <?php echo $Result[0]['name']?>
-                <span class="text-muted float-right"><?php echo $cmresult[0]['created-at']?></span>
-              </span><!-- /.username -->
-                  <?php echo $cmresult[0]['content']?>
+                  <span class="text-muted float-right"><?php echo $value['created-at']?></span>
+                </span><!-- /.username -->
+                    <?php echo $value['content']?>
+              </div>
+              <!-- /.comment-text -->
             </div>
-            <!-- /.comment-text -->
-          </div>
-          <!-- /.card-comment -->
+          <?php
+        }
+          ?>
+
         </div>
         <!-- /.card-footer -->
         <div class="card-footer">
@@ -111,11 +126,13 @@
     </div>
     <!-- /.col -->
   </div>
+
+
   <footer style="margin-left:0px;" class="main-footer" style="margin-left:0px !Important">
     <strong>Copyright © 2014-2021 <a href="#">Min thant kyaw</a>.</strong>
         All rights reserved.
       <div class="float-right d-none d-sm-inline-block">
-          <b>Version</b> 3.2.0
+          <b><a  class="btn btn-warning" href="logout.php">Log out</a></b>
       </div>
   </footer>
 
