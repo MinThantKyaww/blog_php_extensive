@@ -18,18 +18,27 @@
           else {
               move_uploaded_file($_FILES['image']['tmp_name'],$targetFile);
           }
-
-          $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',image='$image',created_at='$created_at' WHERE id ='$id'");
-          $result = $pdostatement->execute();
+          if ($_POST['title'] == '' || $_POST['description'] == '') {
+              echo "<script>alert('title and description cannot be empty')</script>";
+          }
+          else{
+                $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',image='$image',created_at='$created_at' WHERE id ='$id'");
+                $result = $pdostatement->execute();
           if($result) {
               echo "<script>alert('record update successful:');window.location.href='index.php';</script>";
           }
+          }
       }
       else {
-        $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',created_at='$created_at' WHERE id ='$id'");
+        if ($_POST['title'] == '' || $_POST['description'] == '') {
+              echo "<script>alert('title and description cannot be empty')</script>";
+          }
+        else{
+            $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',created_at='$created_at' WHERE id ='$id'");
         $result = $pdostatement->execute();
         if($result) {
             echo "<script>alert('record update successful:without changing photo');window.location.href='index.php';</script>";
+        }
         }
       }
     }

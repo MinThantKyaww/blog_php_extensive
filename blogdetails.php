@@ -33,15 +33,17 @@
 
     if ($_POST) {
       $comment=$_POST['comment'];
-      $sql = "INSERT INTO comments(content,author_id,post_id) VALUES(:content,:authour_id,:post_id)";
-      $pdoStmt = $pdo->prepare($sql);
-      $cmtresult = $pdoStmt->execute(
-      array(':content'=>$comment,':authour_id'=>$_SESSION['user_id'],':post_id'=>$post_id));
+      if ($_POST['comment'] != '') {
+        $sql = "INSERT INTO comments(content,author_id,post_id) VALUES(:content,:authour_id,:post_id)";
+        $pdoStmt = $pdo->prepare($sql);
+        $cmtresult = $pdoStmt->execute(
+        array(':content'=>$comment,':authour_id'=>$_SESSION['user_id'],':post_id'=>$post_id));
 
-    if ($cmtresult) {
-      header('Location: blogdetails.php?id='.$post_id);
+          if ($cmtresult) {
+          header('Location: blogdetails.php?id='.$post_id);
+          }
+      }
     }
-  }
 ?>
 <!DOCTYPE html>
 <html lang="en">

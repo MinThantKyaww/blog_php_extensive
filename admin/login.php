@@ -5,8 +5,18 @@ session_start();
 if (!empty($_POST)) {
     $email=$_POST['email'];
     $password=$_POST['password'];
-
-    $sql="SELECT * FROM users WHERE email = :email";
+    if (empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 8) {
+      if (empty($_POST['email'])) {
+            $emailError = 'email cannot be empty';
+        }
+        if (empty($_POST['password'])) {
+            $passwordError = 'password cannot be empty';
+        }
+        if (strlen($_POST['password']) < 4) {
+            $passwordError = 'password must be al least 4 characters';
+        }
+    } else {
+      $sql="SELECT * FROM users WHERE email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':email',$email);
     // $stmt->bindValue(':password',$password);
@@ -18,20 +28,28 @@ if (!empty($_POST)) {
     }
     else{
         $passwordValid= password_verify($password,$user['password']);
-        if ($passwordValid) {
-            $_SESSION['user_id']=$user['id'];
-            $_SESSION['logged_in']=time();
+        if ($passwordValid){
+            if ($user['role'] != 1) {
+              echo "<script>alert('Wrong admin');window.location.hred='login.php';</script>";
+              
+            }else{
+              $_SESSION['user_id']=$user['id'];
+              $_SESSION['logged_in']=time();
+              $_SESSION['role']=$user['role'];
+              header('location: index.php');
+              exit(); 
+            }
 
-
-
-            header('location: index.php');
-            exit();
+            
         }
 
     else{
         echo "<script>alert('wrong password ')</script>";
     }
 }
+    }
+    
+    
 
 
 }
@@ -71,6 +89,7 @@ if (!empty($_POST)) {
             </div>
           </div>
         </div>
+        <p style="color:red;"><?php echo empty($emailError) ? '' : $emailError;?></p>
         <div class="input-group mb-3">
           <input type="password" name="password" class="form-control" placeholder="Password">
           <div class="input-group-append">
@@ -79,6 +98,7 @@ if (!empty($_POST)) {
             </div>
           </div>
         </div>
+        <p style="color:red;"><?php echo empty($passwordError) ? '' : $passwordError;?></p>
         <div class="row">
           <div class="col-6">
             <button type="submit" class="btn btn-primary btn-block">Sign In</button>

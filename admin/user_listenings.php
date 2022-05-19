@@ -53,39 +53,42 @@
 <div class="wrapper">
 
   <?php
+
   if (!empty($_GET['pageno'])) {
     $pageno = $_GET['pageno'];
   }
   else {
     $pageno = 1;
   }
-    $frames = 5;
+    $frames = 3;
     $offset = ($pageno - 1) * $frames;
 
 
 
     if (empty($_POST['search']) && !isset($_COOKIE['search'])) {
-      $pdostatement = $pdo->prepare("SELECT * FROM post ORDER BY id DESC");
+    	$pdostatement = $pdo->prepare("SELECT * FROM users ORDER BY id DESC");
       $pdostatement->execute();
       $rawResult = $pdostatement->fetchAll();
       $totalpages = ceil(count($rawResult)/$frames);
 
-      $pdostatement = $pdo->prepare("SELECT * FROM post ORDER BY id DESC LIMIT $offset,$frames");
+      $pdostatement = $pdo->prepare("SELECT * FROM users ORDER BY id DESC LIMIT $offset,$frames");
       $pdostatement->execute();
       $result = $pdostatement->fetchAll();
+      
     }
     else {
-      $searchKey = $_POST['search'] ? $_POST['search'] :$_COOKIE['search'];
-      $pdostatement = $pdo->prepare("SELECT * FROM post WHERE title LIKE '%$searchKey%' ORDER BY id DESC");
+    	$searchKey = $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
+      $pdostatement = $pdo->prepare("SELECT * FROM users WHERE name LIKE '%$searchKey%' ORDER BY id DESC");
       $pdostatement->execute();
       $rawResult = $pdostatement->fetchAll();
       $totalpages = ceil(count($rawResult)/$frames);
 
-      $pdostatement = $pdo->prepare("SELECT * FROM post WHERE title LIKE '%$searchKey%' ORDER BY id DESC LIMIT $offset,$frames");
+      $pdostatement = $pdo->prepare("SELECT * FROM users WHERE name LIKE '%$searchKey%' ORDER BY id DESC LIMIT $offset,$frames");
       $pdostatement->execute();
       $result = $pdostatement->fetchAll();
-    
+      
     }
+    
 
 
   ?>
@@ -98,7 +101,7 @@
             <i class="fas fa-search"></i>
           </a>
           <div class="navbar-search-block">
-            <form action="index.php" method="post">
+            <form action="" class="form-inline" method="post">
               <div class="input-group input-group-sm">
                 <input class="form-control form-control-navbar" name="search" type="search" placeholder="Search" aria-label="Search">
                 <div class="input-group-append">
@@ -117,16 +120,15 @@
     </nav>
     <div class="card-body">
           <table class="table table-bordered">
-            <h1>Post mangement</h1>
+            <h1>User mangement</h1>
               <div>
-                  <a class="btn btn-primary"  href="add.php">Create new</a>
+                  <a class="btn btn-primary"  href="user_add.php">Create new</a>
                   <a style="float:right;" class="btn btn-warning" href="logout.php">Log out</a></br>
               </div></br>
               <thead>
-                  <th>#Id</th>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Created_at</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
                   <th>Action</th>
               </thead>
               <tbody>
@@ -136,16 +138,14 @@
                       foreach ($result as $value) {
                   ?>
                   <tr>
-                      <td><?php echo $i?></td>
-                      <td><?php echo $value['title']?></td>
-                      <td><?php echo substr($value['description'],0,15)?></td>
-                      <td><?php echo date('d/m/y',strtotime($value['created_at']))?></td>
+                      <td><?php echo $value['name']?></td>
+                      <td><?php echo $value['email']?></td>
+                      <td><?php if ($value['role']==1){echo 'admin';}else{echo 'user';} ?></td>
                       <td>
-                          <a href="edit.php?id=<?php echo $value['id']?>" type="button" class="btn btn-warning">Edit</a>
-                          <a href="delete.php?id=<?php echo $value['id']?>" onclick="return confirm('Are you sure you want to delete this item?');"
+                          <a href="user_edit.php?id=<?php echo $value['id']?>" type="button" class="btn btn-warning">Edit</a>
+                          <a href="user_delete.php?id=<?php echo $value['id']?>" onclick="return confirm('Are you sure you want to delete this item?');"
                             class="btn btn-danger">Delete</a>
-
-                            </td>
+					</td>
                   </tr>
 
 
@@ -283,3 +283,4 @@
 <script src="../dist/js/pages/dashboard.js"></script>
 </body>
 </html>
+

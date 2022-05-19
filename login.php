@@ -6,7 +6,10 @@ if (!empty($_POST)) {
     $email=$_POST['email'];
     $password=$_POST['password'];
 
-    $sql="SELECT * FROM users WHERE email = :email";
+    if ($email=='' || $password=='') {
+      echo "<script>alert('fill the form data')</script>";
+    } else {
+      $sql="SELECT * FROM users WHERE email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':email',$email);
     // $stmt->bindValue(':password',$password);
@@ -21,8 +24,7 @@ if (!empty($_POST)) {
         if ($passwordValid) {
             $_SESSION['user_id']=$user['id'];
             $_SESSION['logged_in']=time();
-
-
+            $_SESSION['role']=0;
 
             header('location: index.php');
             exit();
@@ -32,6 +34,8 @@ if (!empty($_POST)) {
         echo "<script>alert('wrong password ')</script>";
     }
 }
+    }
+    
 
 
 }

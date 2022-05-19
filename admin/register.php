@@ -6,7 +6,6 @@ if (!empty($_POST)) {
     $username=$_POST['name'];
     $email=$_POST['email'];
     $password=$_POST['password'];
-
     if ($username=='' || $email=='' || $password=='') {
         echo "<script>alert('fill the form data')</script>";
     }
@@ -24,11 +23,12 @@ if (!empty($_POST)) {
         else {
             $passwordHash = password_hash($password,PASSWORD_BCRYPT);
 
-            $sql = "INSERT INTO users(name,email,password) VALUES(:name,:email,:password)";
+            $sql = "INSERT INTO users(name,email,password,role) VALUES(:name,:email,:password,:role)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(':name',$username);
             $stmt->bindValue(':email',$email);
             $stmt->bindValue(':password',$passwordHash);
+            $stmt->bindValue(':role',1);
 
             $result = $stmt->execute();
 

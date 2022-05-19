@@ -1,7 +1,29 @@
 <?php
     require 'config.php';
+    session_start();
+    if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
+      header('Location: login.php');
+    }
+    if ($_SESSION['role'] != 1) {
+      header('Location: login.php');
+    }
+    // print"<pre>";
+    // print_r($_FILES);
+    // exit();
 
-    if (!empty($_POST)) {
+    if ($_POST) {
+        if (empty($_POST['title']) || empty($_POST['description']) || empty($_FILES['image']['name'])) {
+        if (empty($_POST['title'])) {
+            $titleError = 'title cannot be empty';
+        }
+        if (empty($_POST['description'])) {
+            $descriptionError = 'description cannot be empty';
+        }
+        if (empty($_FILES['image']['name'])) {
+            $imageError = 'image cannot be empty';
+        }
+    } else {
+        
 
         if ($_FILES) {
           $targetFile = 'images/'.($_FILES['image']['name']);
@@ -9,22 +31,26 @@
 
 
           if ($imageType != 'jpg' && $imageType != 'png' && $imageType != 'jpeg') {
-              echo "we only accept jpg,png,jpeg";
+            echo "<script>alert('we only accept jpg,png,jpeg');</script>";
           }else {
               move_uploaded_file($_FILES['image']['tmp_name'],$targetFile);
-              $sql = "INSERT INTO post(title,description,image,created_at) VALUES(:title,:description,:image,:created_at)";
+              $sql = "INSERT INTO post(title,description,image) VALUES(:title,:description,:image)";
               $pdoStmt = $pdo->prepare($sql);
               $result = $pdoStmt->execute(
-              array(':title'=>$_POST['title'],':description'=>$_POST['description'],':image'=>$_FILES['image']['name'],':created_at'=>$_POST['created_at']));
-          }
+              array(':title'=>$_POST['title'],':description'=>$_POST['description'],':image'=>$_FILES['image']['name']));
+            }
               if ($result) {
                   echo "<script>alert('record add successful:');window.location.href='index.php';</script>";
               }
         }
 
-
-
+    
+        
     }
+    }
+    
+
+    
 ?>
 
 <!DOCTYPE html>
@@ -40,24 +66,23 @@
 <body>
 <div class="card">
         <div class="card-body">
-            <h1>Register</h1>
+            <h1>New record</h1>
             <form action="add.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">Title</label></br>
-                <input type="text" class="form-control" name="title" value="" required>
+                <p style="color:red;"><?php echo empty($titleError) ? '' : $titleError;?></p>
+                <input type="text" class="form-control" name="title" value="" >
             </div>
             <div class="form-group">
                 <label for="username">description</label></br>
-                <input type="text" class="form-control" name="description" value="" required>
+                <p style="color:red;"><?php echo empty($descriptionError) ? '' : $descriptionError;?></p>
+                <input type="text" class="form-control" name="description" value="" >
             </div>
             <div class="form-group">
                 <label for="image">image</label></br>
-                <input type="file" class="form-control" name="image" value="" required>
+                <p style="color:red;"><?php echo empty($imageError) ? '' : $imageError;?></p>
+                <input type="file" class="form-control" name="image" value="" >
             </div>
-            <div class="form-group">
-                <label for="date">date</label></br>
-                <input type="date" class="form-control" name="created_at" value="" required>
-            </div></br>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" name="" value="Submit">
                 <a class="btn btn-warning" href="index.php">Back</a>
