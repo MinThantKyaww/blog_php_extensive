@@ -1,6 +1,8 @@
 <?php
-require 'admin/config.php';
 session_start();
+require 'admin/config.php';
+require 'admin/common.php';
+
 
 if (!empty($_POST)) {
     $email=$_POST['email'];

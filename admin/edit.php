@@ -1,10 +1,11 @@
 <?php
+    session_start();
     require 'config.php';
+    require 'common.php';
 
     if ($_POST) {
       $title = $_POST['title'];
       $desc = $_POST['description'];
-      $created_at = $_POST['created_at'];
       $id=$_GET['id'];
       if ($_FILES['image']['name'] != null) {
 
@@ -22,7 +23,7 @@
               echo "<script>alert('title and description cannot be empty')</script>";
           }
           else{
-                $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',image='$image',created_at='$created_at' WHERE id ='$id'");
+                $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',image='$image' WHERE id ='$id'");
                 $result = $pdostatement->execute();
           if($result) {
               echo "<script>alert('record update successful:');window.location.href='index.php';</script>";
@@ -34,7 +35,7 @@
               echo "<script>alert('title and description cannot be empty')</script>";
           }
         else{
-            $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',created_at='$created_at' WHERE id ='$id'");
+            $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc' WHERE id ='$id'");
         $result = $pdostatement->execute();
         if($result) {
             echo "<script>alert('record update successful:without changing photo');window.location.href='index.php';</script>";
@@ -68,24 +69,21 @@
         <div class="card-body">
             <h1>Edit</h1>
             <form action="" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="<?php echo $result[0]['id']?>">
+            <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+            <input type="hidden" name="id" value="<?php echo escape($result[0]['id'])?>">
             <div class="form-group">
                 <label for="username">Title</label>
-                <input type="text" class="form-control" name="title" value="<?php echo $result[0]['title']?>">
+                <input type="text" class="form-control" name="title" value="<?php echo escape($result[0]['title'])?>">
             </div>
             <div class="form-group">
                 <label for="username">description</label>
-                <input type="text" class="form-control" name="description" value="<?php echo $result[0]['description']?>">
+                <input type="text" class="form-control" name="description" value="<?php echo escape($result[0]['description'])?>">
             </div>
             <div class="form-group">
                 <label for="image">image</label>
                 <img src="images/<?php echo $result[0]['image']?>" style="float:right"  width="100px" height="100px"  alt="">
                 <input type="file" class="form-control" name="image" value="">
             </div>
-            <div class="form-group">
-                <label for="date">date</label>
-                <input type="date" class="form-control" name="created_at" value="<?php echo date('Y-m-d',strtotime($result[0]['created_at']));?>">
-            </div></br>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" name="" value="Update">
                 <a class="btn btn-warning" href="index.php">Back</a>

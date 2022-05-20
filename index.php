@@ -1,6 +1,8 @@
 <?php
-    require 'admin/config.php';
     session_start();
+    require 'admin/config.php';
+    require 'admin/common.php';
+    
     if (empty($_SESSION['user_id']) ||  empty($_SESSION['logged_in'])) {
         echo "<script>
         alert('please log in to continue:');
@@ -57,7 +59,7 @@
            <div class="col-md-4">
              <div class="card card-widget">
                <div class="card-header">
-                   <h2 style="text-align:center !important"><?php echo $value['title']?></h2>
+                   <h2 style="text-align:center !important"><?php echo escape($value['title'])?></h2>
                </div>
                <div class="card-body">
                  <a href="blogdetails.php?id=<?php echo $value['id']?>"><img class="img-fluid pad" src="admin/images/<?php echo $value['image']?>" alt="Photo" width=100%></a>

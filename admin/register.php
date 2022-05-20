@@ -1,6 +1,7 @@
 <?php
-
+session_start();
 require 'config.php';
+require 'commmon.php';
 
 if (!empty($_POST)) {
     $username=$_POST['name'];
@@ -67,6 +68,7 @@ if (!empty($_POST)) {
       <p class="login-box-msg"></p>
 
       <form action="register.php" method="post">
+        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
         <div class="input-group mb-3">
           <input type="text" name="name" class="form-control" placeholder="Name">
           <div class="input-group-append">

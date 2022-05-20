@@ -1,6 +1,7 @@
 <?php
-require 'config.php';
 session_start();
+require 'config.php';
+require 'common.php';
 
 if (!empty($_POST)) {
     $email=$_POST['email'];
@@ -81,6 +82,7 @@ if (!empty($_POST)) {
       <p class="login-box-msg">Sign in to start your session</p>
 
       <form action="login.php" method="post">
+        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
         <div class="input-group mb-3">
           <input type="email" name="email" class="form-control" placeholder="Email">
           <div class="input-group-append">

@@ -1,6 +1,8 @@
 <?php
-    require 'admin/config.php';
     session_start();
+    require 'admin/config.php';
+    require 'admin/common.php';
+
     if (empty($_SESSION['user_id']) ||  empty($_SESSION['logged_in'])) {
         echo "<script>
         alert('please log in to continue:');
@@ -100,10 +102,10 @@
 
 
                 ?>
-                <?php echo $Result[0]['name']?>
-                  <span class="text-muted float-right"><?php echo $value['created-at']?></span>
+                <?php echo escape($Result[0]['name'])?>
+                  <span class="text-muted float-right"><?php echo escape($value['created-at'])?></span>
                 </span><!-- /.username -->
-                    <?php echo $value['content']?>
+                    <?php echo escape($value['content'])?>
               </div>
               <!-- /.comment-text -->
             </div>
@@ -115,6 +117,7 @@
         <!-- /.card-footer -->
         <div class="card-footer">
           <form action="" method="post">
+            <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
             <img class="img-fluid img-circle img-sm" src="dist/img/user4-128x128.jpg" alt="Alt Text">
             <!-- .img-push is used to add margin to elements next to floating images -->
             <div class="img-push">

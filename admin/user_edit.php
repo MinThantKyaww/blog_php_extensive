@@ -1,5 +1,7 @@
 <?php
+    session_start();
     require 'config.php';
+    require 'common.php';
 
     if ($_POST) {
       $name = $_POST['name'];
@@ -14,7 +16,7 @@
             $emailError = 'email cannot be empty';
         }
         } else {
-            $pdostatement= $pdo->prepare("UPDATE users SET name='$name',email='$email',role='$role' WHERE id ='$id'");
+            $pdostatement= $pdo->prepare("UPDATE users SET name='$name',email='$email' WHERE id ='$id'");
         $result = $pdostatement->execute();
         if($result) {
               echo "<script>alert('record update successful:');window.location.href='user_listenings.php';</script>";
@@ -44,15 +46,16 @@
         <div class="card-body">
             <h1>Edit</h1>
             <form action="" method="post">
+            <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
             <input type="hidden" name="id" value="<?php echo $result[0]['id']?>">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" name="name" value="<?php echo $result[0]['name']?>">
+                <input type="text" class="form-control" name="name" value="<?php echo escape($result[0]['name'])?>">
             </div>
             <p style="color:red;"><?php echo empty($nameError) ? '' : $nameError;?></p>
             <div class="form-group">
                 <label for="role">Email</label>
-                <input type="email" class="form-control" name="email" value="<?php echo $result[0]['email']?>">
+                <input type="email" class="form-control" name="email" value="<?php echo escape($result[0]['email'])?>">
             </div><br>
             <p style="color:red;"><?php echo empty($emailError) ? '' : $emailError;?></p>
             <div class="form-group">

@@ -1,6 +1,7 @@
 <?php
-    require 'config.php';
     session_start();
+    require 'config.php';
+    require 'common.php';
     if (empty($_SESSION['user_id']) ||  empty($_SESSION['logged_in'])) {
         echo "<script>
         alert('please log in to continue:');
@@ -138,8 +139,8 @@
                       foreach ($result as $value) {
                   ?>
                   <tr>
-                      <td><?php echo $value['name']?></td>
-                      <td><?php echo $value['email']?></td>
+                      <td><?php echo escape($value['name'])?></td>
+                      <td><?php echo escape($value['email'])?></td>
                       <td><?php if ($value['role']==1){echo 'admin';}else{echo 'user';} ?></td>
                       <td>
                           <a href="user_edit.php?id=<?php echo $value['id']?>" type="button" class="btn btn-warning">Edit</a>
