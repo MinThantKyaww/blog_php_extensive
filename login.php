@@ -19,11 +19,12 @@ if (!empty($_POST)) {
 
     $user=$stmt->fetch(PDO::FETCH_ASSOC);
     if (empty($user)) {
-        echo "<script>alert('wrong user ')</script>";
+        echo "<script>alert('wrong user')</script>";
     }
     else{
         $passwordValid= password_verify($password,$user['password']);
         if ($passwordValid) {
+            $_SESSION['name']=$user['name'];
             $_SESSION['user_id']=$user['id'];
             $_SESSION['logged_in']=time();
             $_SESSION['role']=0;
@@ -69,6 +70,7 @@ if (!empty($_POST)) {
       <p class="login-box-msg">Sign in to start your session</p>
 
       <form action="login.php" method="post">
+        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
         <div class="input-group mb-3">
           <input type="email" name="email" class="form-control" placeholder="Email">
           <div class="input-group-append">

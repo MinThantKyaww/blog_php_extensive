@@ -6,7 +6,7 @@ require 'common.php';
 if (!empty($_POST)) {
     $email=$_POST['email'];
     $password=$_POST['password'];
-    if (empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 8) {
+    if (empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
       if (empty($_POST['email'])) {
             $emailError = 'email cannot be empty';
         }
@@ -25,20 +25,20 @@ if (!empty($_POST)) {
 
     $user=$stmt->fetch(PDO::FETCH_ASSOC);
     if (empty($user)) {
-        echo "<script>alert('wrong user ')</script>";
+        echo "<script>alert('wrong user');</script>";
     }
     else{
         $passwordValid= password_verify($password,$user['password']);
         if ($passwordValid){
-            if ($user['role'] != 1) {
-              echo "<script>alert('Wrong admin');window.location.hred='login.php';</script>";
-              
-            }else{
+            if ($user['role'] == 1) {
+              $_SESSION['user_name']=$user['name'];
               $_SESSION['user_id']=$user['id'];
               $_SESSION['logged_in']=time();
               $_SESSION['role']=$user['role'];
               header('location: index.php');
-              exit(); 
+              exit();
+            }else{
+              echo "<script>alert('U are not admin');</script>";
             }
 
             
@@ -81,7 +81,7 @@ if (!empty($_POST)) {
     <div class="card-body login-card-body">
       <p class="login-box-msg">Sign in to start your session</p>
 
-      <form action="login.php" method="post">
+      <form action="" method="post">
         <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
         <div class="input-group mb-3">
           <input type="email" name="email" class="form-control" placeholder="Email">
