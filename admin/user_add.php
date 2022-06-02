@@ -84,11 +84,9 @@ if (!empty($_POST)) {
             </div><br>
             <p style="color:red;"><?php echo empty($passwordError) ? '' : $passwordError;?></p>
             <div class="form-group">
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" name="role" id="flexSwitchCheckDefault">
-                  <label class="form-check-label" for="flexSwitchCheckDefault">Role</label>
-                </div>
-            </div></br>
+                        <label for="">Role</label>
+                        <input type="checkbox" name="role" value="1">
+            </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" name="" value="Submit">
                 <a class="btn btn-warning" href="index.php">Back</a>

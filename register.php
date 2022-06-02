@@ -10,8 +10,7 @@ if (!empty($_POST)) {
 
     if ($username=='' || $email=='' || $password=='') {
         echo "<script>alert('fill the form data')</script>";
-    }
-    else {
+    }else {
         $sql="SELECT COUNT(email) AS num FROM users WHERE email = :email";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':email',$email);
@@ -21,8 +20,7 @@ if (!empty($_POST)) {
 
         if ($row['num']>0) {
             echo "<script>alert('This user already exict,try again!')</script>";
-        }
-        else {
+        }else {
             $passwordHash = password_hash($password,PASSWORD_BCRYPT);
 
             $sql = "INSERT INTO users(name,email,password) VALUES(:name,:email,:password)";
@@ -66,7 +64,6 @@ if (!empty($_POST)) {
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg"></p>
-
       <form action="register.php" method="post">
         <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
         <div class="input-group mb-3">
@@ -104,17 +101,10 @@ if (!empty($_POST)) {
           <!-- /.col -->
         </div>
       </form>
-
-
-      <!-- /.social-auth-links -->
-
-
-
     </div>
-    <!-- /.login-card-body -->
   </div>
 </div>
-<!-- /.login-box -->
+
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>

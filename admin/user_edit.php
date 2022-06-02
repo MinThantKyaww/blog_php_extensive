@@ -7,6 +7,14 @@
       $name = $_POST['name'];
       $email = $_POST['email'];
       $id=$_GET['id'];
+      if (!empty($_POST)) {
+
+        if (empty($_POST['role'])) {
+            $role=0;
+        } else {
+            $role=1;
+        }
+    }
       
         if (empty($_POST['name']) || empty($_POST['email'])) {
             if (empty($_POST['name'])) {
@@ -16,7 +24,7 @@
             $emailError = 'email cannot be empty';
         }
         } else {
-            $pdostatement= $pdo->prepare("UPDATE users SET name='$name',email='$email' WHERE id ='$id'");
+            $pdostatement= $pdo->prepare("UPDATE users SET name='$name',email='$email',role='$role' WHERE id ='$id'");
         $result = $pdostatement->execute();
         if($result) {
               echo "<script>alert('record update successful:');window.location.href='user_listenings.php';</script>";
@@ -59,11 +67,9 @@
             </div><br>
             <p style="color:red;"><?php echo empty($emailError) ? '' : $emailError;?></p>
             <div class="form-group">
-                 <div class="form-group">
-                    <label for="">Role</label>
-                    <input type="checkbox" name="role" value="1" <?php echo $result[0]['role'] == 1 ? 'checked':''?>>
-                  </div>
-            </div></br>
+                        <label for="">Role</label>
+                        <input type="checkbox" name="role" value="1" <?php echo $result[0]['role'] == 1 ? 'checked' : '' ?>>
+            </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" name="" value="Update">
                 <a class="btn btn-warning" href="user_listenings.php">Back</a>

@@ -13,25 +13,11 @@
     $pdo_statement = $pdo->prepare("SELECT * FROM post WHERE id=".$_GET['id']);
     $pdo_statement->execute();
     $result = $pdo_statement->fetchAll();
-    // print'<pre>';
-    // print_r($_GET['id']);
-    // exit();
+  
     $post_id=$_GET['id'];
     $pdo_statement1 = $pdo->prepare("SELECT * FROM comments WHERE post_id=$post_id");
     $pdo_statement1->execute();
     $cmresult = $pdo_statement1->fetchAll();
-
-    // print'<pre>';
-    // print_r($cmresult);
-    // exit();
-
-
-    // $pdo_statement2 = $pdo->prepare("SELECT * FROM users WHERE id=".$_SESSION['user_id']);
-    // $pdo_statement2->execute();
-    // $Result = $pdo_statement2->fetchAll();
-    // print'<pre>';
-    // print_r($Result);
-    // exit();
 
     if ($_POST) {
       $comment=$_POST['comment'];
@@ -76,8 +62,8 @@
         <div class="card-body">
           <img class="img-fluid pad" src="admin/images/<?php echo $result[0]['image']?>" alt="Photo">
           <br><br>
-          <p><?php echo $result[0]['description']?></p>
-          <a type="button" class="btn btn-success" href="/blog">Go back to home page</a>
+          <p><?php echo $result[0]['description']?></p><hr>
+          <a type="button" class="btn btn-success" href="/blog_php_extensive">Go back to home page</a><hr>
 
         </div>
 
@@ -99,7 +85,6 @@
                   $pdo_statement2 = $pdo->prepare("SELECT * FROM users WHERE id=$name");
                   $pdo_statement2->execute();
                   $Result = $pdo_statement2->fetchAll();
-
 
                 ?>
                 <?php echo escape($Result[0]['name'])?>
@@ -132,7 +117,6 @@
     <!-- /.col -->
   </div>
 
-
   <footer style="margin-left:0px;" class="main-footer" style="margin-left:0px !Important">
     <strong>Copyright © 2014-2021 <a href="#">Min thant kyaw</a>.</strong>
         All rights reserved.
@@ -140,8 +124,6 @@
           <b><a  class="btn btn-warning" href="logout.php">Log out</a></b>
       </div>
   </footer>
-
-
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>

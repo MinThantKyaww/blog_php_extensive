@@ -1,57 +1,50 @@
 <?php
-    session_start();
-    require 'config.php';
-    require 'common.php';
+session_start();
+require 'config.php';
+require 'common.php';
 
-    if ($_POST) {
-      $title = $_POST['title'];
-      $desc = $_POST['description'];
-      $id=$_GET['id'];
-      if ($_FILES['image']['name'] != null) {
+if ($_POST) {
+    $title = $_POST['title'];
+    $desc = $_POST['description'];
+    $id=$_GET['id'];
+    if ($_FILES['image']['name'] != null) {
 
-          $image=$_FILES['image']['name'];
-          $targetFile = 'images/'.($_FILES['image']['name']);
-          $imageType = pathinfo($targetFile,PATHINFO_EXTENSION);
+        $image=$_FILES['image']['name'];
+        $targetFile = 'images/'.($_FILES['image']['name']);
+        $imageType = pathinfo($targetFile,PATHINFO_EXTENSION);
 
-          if ($imageType != 'jpg' &&  $imageType != 'png' && $imageType != 'jpeg') {
-             echo "image type can't be assessed";
-          }
-          else {
-              move_uploaded_file($_FILES['image']['tmp_name'],$targetFile);
-          }
-          if ($_POST['title'] == '' || $_POST['description'] == '') {
-              echo "<script>alert('title and description cannot be empty')</script>";
-          }
-          else{
-                $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',image='$image' WHERE id ='$id'");
-                $result = $pdostatement->execute();
-          if($result) {
-              echo "<script>alert('record update successful:');window.location.href='index.php';</script>";
-          }
-          }
-      }
-      else {
+        if ($imageType != 'jpg' &&  $imageType != 'png' && $imageType != 'jpeg') {
+         echo "image type can't be jpg,";
+        }else {
+            move_uploaded_file($_FILES['image']['tmp_name'],$targetFile);
+        }
+        if ($_POST['title'] == '' || $_POST['description'] == '') {
+          echo "<script>alert('title and description cannot be empty')</script>";
+        }else{
+            $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc',image='$image' WHERE id ='$id'");
+            $result = $pdostatement->execute();
+            if($result) {
+                echo "<script>alert('record update successful:');window.location.href='index.php';</script>";
+            }
+        }
+    }else {
         if ($_POST['title'] == '' || $_POST['description'] == '') {
               echo "<script>alert('title and description cannot be empty')</script>";
-          }
+        }
         else{
             $pdostatement= $pdo->prepare("UPDATE post SET title='$title',description='$desc' WHERE id ='$id'");
-        $result = $pdostatement->execute();
-        if($result) {
-            echo "<script>alert('record update successful:without changing photo');window.location.href='index.php';</script>";
+            $result = $pdostatement->execute();
+            if($result) {
+                echo "<script>alert('record update successful:without changing photo');window.location.href='index.php';</script>";
+            }
         }
-        }
-      }
     }
+}
 
-       $pdo_statement = $pdo->prepare("SELECT * FROM post WHERE id=".$_GET['id']);
-       $pdo_statement->execute();
-       $result = $pdo_statement->fetchAll();
-    //    print'<pre>';
-    //    print_r($result);
-    //    exit();
-
-
+   $pdo_statement = $pdo->prepare("SELECT * FROM post WHERE id=".$_GET['id']);
+   $pdo_statement->execute();
+   $result = $pdo_statement->fetchAll();
+ 
 ?>
 
 <!DOCTYPE html>
@@ -83,7 +76,7 @@
                 <label for="image">image</label>
                 <img src="images/<?php echo $result[0]['image']?>" style="float:right"  width="100px" height="100px"  alt="">
                 <input type="file" class="form-control" name="image" value="">
-            </div>
+            </div><br>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" name="" value="Update">
                 <a class="btn btn-warning" href="index.php">Back</a>

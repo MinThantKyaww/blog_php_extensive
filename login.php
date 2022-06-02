@@ -10,37 +10,31 @@ if (!empty($_POST)) {
 
     if ($email=='' || $password=='') {
       echo "<script>alert('fill the form data')</script>";
-    } else {
+    }else{
       $sql="SELECT * FROM users WHERE email = :email";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':email',$email);
-    // $stmt->bindValue(':password',$password);
-    $stmt->execute();
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':email',$email);
+      // $stmt->bindValue(':password',$password);
+      $stmt->execute();
 
-    $user=$stmt->fetch(PDO::FETCH_ASSOC);
-    if (empty($user)) {
-        echo "<script>alert('wrong user')</script>";
-    }
-    else{
+      $user=$stmt->fetch(PDO::FETCH_ASSOC);
+      if (empty($user)) {
+          echo "<script>alert('wrong user');</script>";
+      }else{
         $passwordValid= password_verify($password,$user['password']);
         if ($passwordValid) {
-            $_SESSION['name']=$user['name'];
+            $_SESSION['user_name']=$user['name'];
             $_SESSION['user_id']=$user['id'];
             $_SESSION['logged_in']=time();
-            $_SESSION['role']=0;
+            $_SESSION['role']=$user['id'];
 
             header('location: index.php');
             exit();
+        }else{
+          echo "<script>alert('wrong password ');</script>";
         }
-
-    else{
-        echo "<script>alert('wrong password ')</script>";
-    }
-}
-    }
-    
-
-
+      }
+    }    
 }
 ?>
 <!DOCTYPE html>
@@ -68,7 +62,6 @@ if (!empty($_POST)) {
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Sign in to start your session</p>
-
       <form action="login.php" method="post">
         <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
         <div class="input-group mb-3">
@@ -98,17 +91,9 @@ if (!empty($_POST)) {
           <!-- /.col -->
         </div>
       </form>
-
-
-      <!-- /.social-auth-links -->
-
-
-
     </div>
-    <!-- /.login-card-body -->
   </div>
 </div>
-<!-- /.login-box -->
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>

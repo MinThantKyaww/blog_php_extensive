@@ -18,9 +18,8 @@
         unset($_COOKIE['search']); 
         setcookie('search', null, -1, '/'); 
       }
-  }
+    }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

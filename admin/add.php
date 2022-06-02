@@ -9,52 +9,41 @@
     if ($_SESSION['role'] != 1) {
       header('Location: login.php');
     }
-    // print"<pre>";
-    // print_r($_FILES);
-    // exit();
 
     if ($_POST) {
         if (empty($_POST['title']) || empty($_POST['description']) || empty($_FILES['image']['name'])) {
-        if (empty($_POST['title'])) {
-            $titleError = 'title cannot be empty';
-        }
-        if (empty($_POST['description'])) {
-            $descriptionError = 'description cannot be empty';
-        }
-        if (empty($_FILES['image']['name'])) {
-            $imageError = 'image cannot be empty';
-        }
-    } else {
-        
-
-        if ($_FILES) {
-          $targetFile = 'images/'.($_FILES['image']['name']);
-          $imageType  =  pathinfo($targetFile,PATHINFO_EXTENSION);
-
-
-          if ($imageType != 'jpg' && $imageType != 'png' && $imageType != 'jpeg') {
-            echo "<script>alert('we only accept jpg,png,jpeg');</script>";
-          }else {
-              move_uploaded_file($_FILES['image']['tmp_name'],$targetFile);
-              $sql = "INSERT INTO post(title,description,image) VALUES(:title,:description,:image)";
-              $pdoStmt = $pdo->prepare($sql);
-              $result = $pdoStmt->execute(
-              array(':title'=>$_POST['title'],':description'=>$_POST['description'],':image'=>$_FILES['image']['name']));
+            if (empty($_POST['title'])) {
+                $titleError = 'title cannot be empty';
             }
-              if ($result) {
-                  echo "<script>alert('record add successful:');window.location.href='index.php';</script>";
-              }
+            if (empty($_POST['description'])) {
+                $descriptionError = 'description cannot be empty';
+            }
+            if (empty($_FILES['image']['name'])) {
+                $imageError = 'image cannot be empty';
+            }
+        } else {
+            if ($_FILES) {
+                $targetFile = 'images/'.($_FILES['image']['name']);
+                $imageType  =  pathinfo($targetFile,PATHINFO_EXTENSION);
+
+
+                if ($imageType != 'jpg' && $imageType != 'png' && $imageType != 'jpeg') {
+                    echo "<script>alert('we only accept jpg,png,jpeg');</script>";
+                }else {
+                    move_uploaded_file($_FILES['image']['tmp_name'],$targetFile);
+                    $sql = "INSERT INTO post(title,description,image) VALUES(:title,:description,:image)";
+                    $pdoStmt = $pdo->prepare($sql);
+                    $result = $pdoStmt->execute(
+                        array(':title'=>$_POST['title'],':description'=>$_POST['description'],':image'=>$_FILES['image']['name'])
+                        );
+                }
+                    if ($result) {
+                        echo "<script>alert('record add successful:');window.location.href='index.php';</script>";
+                    }
+            }     
         }
-
-    
-        
-    }
-    }
-    
-
-    
+    }  
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,7 +74,7 @@
                 <label for="image">image</label></br>
                 <p style="color:red;"><?php echo empty($imageError) ? '' : $imageError;?></p>
                 <input type="file" class="form-control" name="image" value="" >
-            </div>
+            </div><br>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" name="" value="Submit">
                 <a class="btn btn-warning" href="index.php">Back</a>
